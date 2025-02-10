@@ -1,15 +1,17 @@
 package main.java;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class SavingsAccount extends BankAccount implements InterestBearing{
-    public SavingsAccount(String accountNumber, double balance, String accountHolder) {
+    public SavingsAccount(String accountNumber, BigDecimal balance, String accountHolder) {
         super(accountNumber, balance, accountHolder);
     }
-    private static final double INSERT_RATE = 0.05;
+    private static final BigDecimal INSERT_RATE = new BigDecimal(0.05);
 
     @Override
-    public void withdraw(double amount) {
-        if (amount <= balance) {
-            balance -= amount;
+    public void withdraw(BigDecimal amount) {
+        if (amount.compareTo(balance) <= 0) {
+            balance = balance.subtract(amount);
         } else {
             System.out.println("Недостаточно средств");
         }
@@ -17,6 +19,6 @@ public class SavingsAccount extends BankAccount implements InterestBearing{
 
     @Override
     public void applyInterest() {
-        balance += balance * INSERT_RATE;
+        balance = balance.add(balance.multiply(INSERT_RATE).setScale(2, RoundingMode.HALF_UP));
     }
 }

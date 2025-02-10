@@ -1,34 +1,35 @@
 package main.java;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class CreditAccount extends BankAccount implements TransactionFee, TransactionValidator {
-    private static final double CREDIT_LIMIT = -5000;
-    private static final double FEE_RATE = 0.01;
-    public CreditAccount(String accountNumber, double balance, String accountHolder) {
+    private static final BigDecimal CREDIT_LIMIT = new BigDecimal("-5000");
+    private static final BigDecimal FEE_RATE = new BigDecimal(0.01);
+    public CreditAccount(String accountNumber, BigDecimal balance, String accountHolder) {
         super(accountNumber, balance, accountHolder);
     }
 
     @Override
-    public void withdraw(double amount) {
+    public void withdraw(BigDecimal amount) {
         if (!validate(amount)){
             System.out.println("Привышен лимит");
         } else  {
-            double totalAmount = applyFee(amount);
-            if (balance - totalAmount >= CREDIT_LIMIT) {
-                balance -= totalAmount;
+            BigDecimal totalAmount = applyFee(amount);
+            if (balance.subtract(totalAmount).compareTo(CREDIT_LIMIT) >= 0) {
+                balance = balance.subtract(totalAmount);
             } else {
                 System.out.println("Привышение кредитного лимита");
             }
         }
-
     }
 
     @Override
-    public double applyFee(double amount) {
-        return amount * (1 + FEE_RATE);
+    public BigDecimal applyFee(BigDecimal amount) {
+        return amount.multiply(BigDecimal.ONE.add(FEE_RATE)).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
-    public boolean validate(double amount) {
-        return amount <= 5000;
+    public boolean validate(BigDecimal amount) {
+        return amount.compareTo(new BigDecimal("5000")) <= 0;
     }
 }

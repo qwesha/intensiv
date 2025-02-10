@@ -1,5 +1,6 @@
 package main.java;
+import java.math.BigDecimal;
 
 public interface TransactionFee {
-    double applyFee(double amount);
+    BigDecimal applyFee(BigDecimal amount);
 }

@@ -1,5 +1,6 @@
-package main.java;// Задача 4 доп
+package main.java;
+import java.math.BigDecimal;
 
 public interface TransactionValidator {
-    boolean validate(double amount);
+    boolean validate(BigDecimal amount);
 }
